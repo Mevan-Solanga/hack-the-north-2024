@@ -15,4 +15,4 @@ class GroqSpeechToText:
           file=(filename, file.read()),
           model="whisper-large-v3"
         )
-        return transcription.text
+    return transcription.text
