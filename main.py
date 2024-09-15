@@ -19,8 +19,8 @@ def main_func():
     while (True):
         microphone.record()
         text = speechToText.get_text()
-        # print(text)
-        # print(to_braille(text))
+        print(text)
+        print(to_braille(text))
         mutex.acquire()
         braille_character_queue.extend(to_braille(text))
         mutex.release()
