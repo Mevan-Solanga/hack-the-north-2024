@@ -1,16 +1,32 @@
-from gpiozero import AngularServo
-from time import sleep
+class GPIOServo:
+    
+    def __init__(self):
+        GPIO.setmode(GPIO.BCM)  # Use BCM numbering
+        GPIO.setup(pin, GPIO.OUT)
+        pwm = GPIO.PWM(pin, 50)
+        pwm.start(7.5) 
+    
+    # Function to move the servo to a specific angle
+    def move_to_angle(degree):
+        # Constrain the degree value between 0 and 180
+        if degree < 0:
+            degree = 0
+        elif degree > 180:
+            degree = 180
+        
+        # Convert the angle to duty cycle
+        duty = (degree / 18.0) + 2.5  # Map 0-180 degrees to duty cycle 2.5-12.5
+        pwm.ChangeDutyCycle(duty)
+        time.sleep(0.5)  # Give enough time for the servo to reach the position
+        pwm.ChangeDutyCycle(0)
 
-servo = AngularServo(17, min_angle=0, max_angle=180, min_pulse_width=0.5/1000, max_pulse_width=2.5/1000)
+    def change_state(self, is_up = False):
+        if is_up:
+            move_to_angle(20)
+        else:
+            move_to_angle(0)
 
-def set_angel(angel):
-	servo.angle = angle
-	sleep(1)
-	
-try:
-	while True:
-		angel = int(input("Enter angel (0 to 180): "))
-		set_angle(angle)
-except KeyboardInterrupt:
-	print("Program stopped by user")
-
+    def __del__(self):
+        pwm.ChangeDutyCycle(0)
+        pwm.stop()
+        GPIO.cleanup()
