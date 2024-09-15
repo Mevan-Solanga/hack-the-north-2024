@@ -1,0 +1,82 @@
+import time
+import RPi.GPIO as GPIO
+
+# Define GPIO pins for the motors (change as needed)
+pins = [17, 27, 22, 25, 23, 24]  # Replace with actual pin numbers
+
+# Set up GPIO
+GPIO.setmode(GPIO.BCM)  # Use BCM numbering
+
+# Initialize PWM for each motor
+pwm = []
+for pin in pins:
+    GPIO.setup(pin, GPIO.OUT)
+    pwm.append(GPIO.PWM(pin, 50))
+    pwm[-1].start(7.5)  # Start with the servo in the center position (90 degrees)
+
+# Function to move all motors to a specific angle
+def move_to_angle(degree):
+    # Constrain the degree value between 0 and 180
+    if degree < 0:
+        degree = 0
+    elif degree > 180:
+        degree = 180
+    
+    # Convert the angle to duty cycle
+    duty = (degree / 18.0) + 2.5  # Map 0-180 degrees to duty cycle 2.5-12.5
+    for p in pwm:
+        p.ChangeDutyCycle(duty)
+    time.sleep(0.5)  # Give enough time for the motors to reach the position
+    for p in pwm:
+        p.ChangeDutyCycle(0)  # Stop PWM signal after movement
+
+# Move all motors to left 90 degrees with intermediate steps
+def smooth_left_90():
+    print("Moving to left 90 degrees")
+    move_to_angle(45)  # Intermediate position to smooth the transition
+    time.sleep(0.3)    # Small pause to let the motors settle
+    move_to_angle(0)   # Final move to 0 degrees (left)
+    time.sleep(0.5)
+
+# Move all motors to right 90 degrees
+def right_90():
+    print("Moving to right 90 degrees")
+    move_to_angle(180)  # 180 degrees represents the far right
+
+# Move all motors back to center
+def center():
+    print("Returning to center (90 degrees)")
+    move_to_angle(90)  # 90 degrees is the center
+
+# Function to stop the PWM and clean up GPIO
+def stop():
+    for p in pwm:
+        p.ChangeDutyCycle(0)
+        p.stop()
+    GPIO.cleanup()
+    print("Motors stopped and GPIO cleaned up")
+
+# Move motors to the left, right, and then back to center
+try:
+    time.sleep(5)
+    smooth_left_90()  # Smooth move to 0 degrees (left)
+    time.sleep(1)     # Wait for 1 second
+    right_90()        # Move to 180 degrees (right)
+    time.sleep(1)     # Wait for 1 second
+    center()          # Move back to 90 degrees (center)
+    time.sleep(1)     # Wait for 1 second
+    smooth_left_90()  # Smooth move to 0 degrees (left)
+    time.sleep(1)     # Wait for 1 second
+    right_90()        # Move to 180 degrees (right)
+    time.sleep(1)     # Wait for 1 second
+    center()          # Move back to 90 degrees (center)
+    time.sleep(1)     # Wait for 1 second
+    smooth_left_90()  # Smooth move to 0 degrees (left)
+    time.sleep(1)     # Wait for 1 second
+    right_90()        # Move to 180 degrees (right)
+    time.sleep(1)     # Wait for 1 second
+    center()          # Move back to 90 degrees (center)
+    time.sleep(1)     # Wait for 1 second
+
+finally:
+    stop()  # Ensure the motors are stopped and GPIO is cleaned up

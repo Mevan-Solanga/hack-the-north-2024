@@ -1,3 +1,6 @@
+import time
+import RPi.GPIO as GPIO
+
 class GPIOServo:
 
     def __init__(self, pin):
@@ -7,7 +10,7 @@ class GPIOServo:
         self.pwm.start(7.5) 
     
     # Function to move the servo to a specific angle
-    def move_to_angle(degree):
+    def move_to_angle(self, degree):
         # Constrain the degree value between 0 and 180
         if degree < 0:
             degree = 0
@@ -22,9 +25,9 @@ class GPIOServo:
 
     def change_state(self, is_up = False):
         if is_up:
-            move_to_angle(20)
+            self.move_to_angle(20)
         else:
-            move_to_angle(0)
+            self.move_to_angle(0)
 
     def __del__(self):
         self.pwm.ChangeDutyCycle(0)

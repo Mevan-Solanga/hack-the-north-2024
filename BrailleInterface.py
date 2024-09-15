@@ -1,5 +1,5 @@
 import time
-from Servo import GPIOServo
+from servo import GPIOServo
 
 PINS = [27, 23, 17, 25, 24, 22]
 
