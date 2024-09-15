@@ -1,15 +1,10 @@
-from gpiozero import Servo
-from time import sleep
 from gpiozero import AngularServo
-from gpiozero.pins.pigpio import PiGPIOFactory
-from gpiozero import Device
+from time import sleep
 
-Device.pin_factory = PiGPIOFactory()
-
-servo = AngularServo(17)
+servo = AngularServo(17, min_angle=-90, max_angle=90)
 
 while True:
     servo.angle = 75
     sleep(2)
-    servo.angle = 50
+    servo.angle = 45
     sleep(2)
