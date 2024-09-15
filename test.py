@@ -1,6 +1,7 @@
 import time
 import RPi.GPIO as GPIO
 
+# 27, 23, 17, 25, 24, 22
 pin = 25  # Use pin 17 for BCM numbering
 
 # Set up GPIO

@@ -1,6 +1,6 @@
 class GPIOServo:
-    
-    def __init__(self):
+
+    def __init__(self, pin):
         GPIO.setmode(GPIO.BCM)  # Use BCM numbering
         GPIO.setup(pin, GPIO.OUT)
         pwm = GPIO.PWM(pin, 50)
